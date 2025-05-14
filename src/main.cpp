@@ -8,7 +8,7 @@ struct Coefficient {
 Coefficient coeffList[] = {
     {0.07, 0.0391, -13.196, 390.95}
 };
-double vStarList[] = {13.98};
+double vStarList[] = {13.99};
 int index = 0;
 Coefficient coeff = coeffList[index];
 double vStar = vStarList[index];

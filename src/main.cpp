@@ -2,9 +2,20 @@
 using namespace std;
 
 
-/// @brief most energy-efficient speed
-const double vStar = 13.98;
+struct Coefficient {
+    double c3, c2, c1, c0;
+};
+Coefficient coeffList[] = {
+    {0.07, 0.0391, -13.196, 390.95}
+};
+double vStarList[] = {13.98};
+int index = 0;
+Coefficient coeff = coeffList[index];
+double vStar = vStarList[index];
 
+double calPower(double v) {
+    return coeff.c3 * v * v * v + coeff.c2 * v * v + coeff.c1 * v + coeff.c0;
+}
 
 struct Sensor {
     double l, r, t;

@@ -33,8 +33,7 @@ public:
     /// @brief Looking Before Crossing
     /// @param pos list of speed changing positions
     /// @param speed list of speed in segments
-    /// @return energy consumption
-    double solve(vector<double> &pos, vector<double> &speed) { 
+    void solve(vector<double> &pos, vector<double> &speed) { 
         pos.clear();
         speed.clear();
 
@@ -85,21 +84,17 @@ public:
             }
 
             if (v > vStar) {
-                //
+                // reconstruct rooms
+                v = vStar;
             }
-
 
             i = iNext;
             d = dNext;
+
+            pos.emplace_back(d);
+            speed.emplace_back(v);
         }
-
-        return 0;
     }
-
-    // int getN() {return n;}
-    // double getLen() {return len;}
-    // Sensor getSensor(int i) {return sensors[i];}
-    // vector<Sensor> getSensors() {return sensors;}
 };
 
 
@@ -114,7 +109,7 @@ int main() {
         Solver sol = Solver(&prob);
         vector<double> pos;
         vector<double> speed;
-        // double energy = sol.solve(pos, speed);
+        prob.solve(pos, speed);
     }
     return 0;
 }

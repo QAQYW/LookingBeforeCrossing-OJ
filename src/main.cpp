@@ -74,7 +74,7 @@ public:
                 if (vDoorNorth < vViewSouth) {
                     v = vViewSouth;
                     iNext = iViewSouth;
-                    dNext = sensors[iViewSouth + 1].s;
+                    dNext = sensors[iViewSouth + 1].l;
                     break;
                 }
                 if (vViewNorth > vDoorNorth) {
@@ -126,7 +126,7 @@ public:
 int main() {
     int T;
     // string IN_PATH = "./input";
-    // string OUT_PATH = "./myanswer";
+    string OUT_PATH = "./myanswer";
 
     cin >> T;
     while (T--) {
@@ -134,6 +134,26 @@ int main() {
         vector<double> pos;
         vector<double> speed;
         prob.solve(pos, speed);
+
+        // test output
+        // for (double d : pos) {cout << d << " ";}
+        // puts("");
+        // for (double v : speed) {cout << v << " ";}
+        // puts("");
+        pos.insert(pos.begin(), 0);
+        ofstream fout;
+        fout.open(OUT_PATH, ios::out | ios::app);
+        int sz = pos.size();
+        for (int i = 0; i < sz; i++) {
+            fout << pos[i];
+            if (i == sz - 1) fout << '\n';
+            else fout << ' ';
+        }
+        sz = speed.size();
+        for (int i = 0; i < sz; i++) {
+            if (i == sz - 1) fout << '\n';
+            else fout << ' ';
+        }
     }
     return 0;
 }

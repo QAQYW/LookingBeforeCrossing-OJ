@@ -106,6 +106,20 @@ public:
             speed.emplace_back(v);
         }
     }
+
+    /// @brief assign the overlapping range to the left sensor, min{v, vStar}
+    /// @param pos 
+    /// @param speed 
+    void solve_AllNorth(vector<double> &pos, vector<double> &speed) {
+
+    }
+
+    /// @brief assign the overlapping range to the right sensor, min{v, vStar}
+    /// @param pos 
+    /// @param speed 
+    void solve_AllSouth(vector<double> &pos, vector<double> &speed) {
+        
+    }
 };
 
 
@@ -117,7 +131,6 @@ int main() {
     cin >> T;
     while (T--) {
         Problem prob = Problem();
-        Solver sol = Solver(&prob);
         vector<double> pos;
         vector<double> speed;
         prob.solve(pos, speed);

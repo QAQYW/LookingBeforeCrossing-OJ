@@ -5,7 +5,7 @@ using namespace std;
 const double MIN_RANGE = 10;
 const double MAX_RANGE = 100;
 
-const double MIN_SPEED = 0.1;
+const double MIN_SPEED = 3;
 const double MAX_SPEED = 20;
 
 const double MIN_RATIO = 0.1;
@@ -62,7 +62,7 @@ vector<Sensor> make_random(int n) {
 
 int main() {
 
-    string outpath = "./input";
+    string outpath = "./input-test";
 
     ofstream fout;
     int tot = 8;   // number of test data
@@ -83,6 +83,8 @@ int main() {
         }
         fout.close();
     }
+
+    puts("Data generated.\n");
 
     return 0;
 }

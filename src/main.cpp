@@ -9,10 +9,15 @@ struct Coefficient {
     double c3, c2, c1, c0;
 };
 Coefficient coeffList[] = {
-    {0.07, 0.0391, -13.196, 390.95}
+    {0.07, 0.0391, -13.196, 390.95},
+    {0.03, 0.08, -16.3, 180},
+    {0.274, 0.06, -16.3, 60},
+    {0.37, 0.136, -31.6, 110},
+    {0.37, 0.136, -110, 730},
+    {0.37, 0.136, -150, 1160}
 };
-double vStarList[] = {13.9895};
-int index = 0;
+double vStarList[] = {13.9895, 13.9915, 4.7478, 5.2367, 9.8939, 11.5556};
+int index = 5;
 Coefficient coeff = coeffList[index];
 double vStar = vStarList[index];
 
@@ -23,14 +28,19 @@ double calPower(double v) {
 
 
 double calEnergy(double len, double v) {
-    return len / v * calPower(v);
+    double p = calPower(v);
+    double e = len / v * p;
+    return e;
 }
 
 double calEnergy(const vector<double> &pos, const vector<double> &speed) {
     int sz = speed.size();
-    double e = 0;
+    double e = 0, t, v, len;
     for (int i = 0; i < sz; i++) {
-        e += calEnergy(pos[i + 1] - pos[i], speed[i]);
+        len = pos[i + 1] - pos[i];
+        v = speed[i];
+        t = calEnergy(len, v);
+        e += t;
     }
     return e;
 }
@@ -77,6 +87,7 @@ public:
     void solve(vector<double> &pos, vector<double> &speed) { 
         pos.clear();
         speed.clear();
+        pos.emplace_back(0);
 
         vector<double> tsum = vector<double>(n + 1, 0);
         for (int i = 1; i <= n; i++) {
@@ -141,21 +152,41 @@ public:
     /// @param pos 
     /// @param speed 
     void solve_AllNorth(vector<double> &pos, vector<double> &speed) {
+        pos.clear();
+        speed.clear();
+        pos.emplace_back(0);
 
+        double last = 0;
+        for (int i = 1; i <= n; i++) {
+            double v = (sensors[i].r - last) / sensors[i].t;
+            pos.emplace_back(sensors[i].r);
+            speed.emplace_back(v);
+            // speed.emplace_back(min(v, vStar));
+            last = sensors[i].r;
+        }
     }
 
     /// @brief assign the overlapping range to the right sensor, min{v, vStar}
     /// @param pos 
     /// @param speed 
     void solve_AllSouth(vector<double> &pos, vector<double> &speed) {
+        pos.clear();
+        speed.clear();
+        pos.emplace_back(0);
         
+        for (int i = 1; i <= n; i++) {
+            double v = (sensors[i + 1].l - sensors[i].l) / sensors[i].t;
+            pos.emplace_back(sensors[i + 1].l);
+            speed.emplace_back(v);
+            // speed.emplace_back(min(v, vStar));
+        }
     }
 };
 
 
 int main() {
     int T;
-    string IN_PATH = "./input";
+    string IN_PATH = "./input-test";
     string OUT_PATH = "./output-test";
 
     ifstream fin(IN_PATH);
@@ -177,13 +208,14 @@ int main() {
         auto duration = duration_cast<milliseconds>(ed - st);
 
         double energy = calEnergy(pos, speed);
+        double optimal = energy;
 
         // test output
         // for (double d : pos) {cout << d << " ";}
         // puts("");
         // for (double v : speed) {cout << v << " ";}
         // puts("");
-        pos.insert(pos.begin(), 0);
+
         fout.open(OUT_PATH, ios::out | ios::app);
         int sz = pos.size();
         for (int i = 0; i < sz; i++) {
@@ -202,6 +234,24 @@ int main() {
         fout << "energy = " << to_string(energy) << "\n";
 
         fout.close();
+        
+        cout << "Looking\n";
+        cout << "\ttime = " << duration.count() << " ms\n";
+        cout << "\tenergy = " << to_string(energy) << "\n";
+
+        prob.solve_AllNorth(pos, speed);
+        energy = calEnergy(pos, speed);
+        cout << "All North\n";
+        cout << "\tenergy = " << to_string(energy) << "\n";
+        cout << "\t" << to_string(energy / optimal * 100) << "\% of optimal\n";
+
+        prob.solve_AllSouth(pos, speed);
+        energy = calEnergy(pos, speed);
+        cout << "All South\n";
+        cout << "\tenergy = " << to_string(energy) << "\n";
+        cout << "\t" << to_string(energy / optimal * 100) << "\% of optimal\n";
+
+        puts("");
     }
     
     fin.close();

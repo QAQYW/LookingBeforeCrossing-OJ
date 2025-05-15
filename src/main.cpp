@@ -1,5 +1,8 @@
 #include <bits/stdc++.h>
+#include <chrono>
+
 using namespace std;
+using namespace std::chrono;
 
 
 struct Coefficient {
@@ -16,6 +19,7 @@ double vStar = vStarList[index];
 double calPower(double v) {
     return coeff.c3 * v * v * v + coeff.c2 * v * v + coeff.c1 * v + coeff.c0;
 }
+
 
 struct Sensor {
     double l, r, t;
@@ -37,6 +41,17 @@ public:
         sensors = vector<Sensor>(n + 2);
         for (int i = 1; i <= n; i++) {
             cin >> sensors[i].l >> sensors[i].r >> sensors[i].t;
+        }
+        sensors[n + 1] = Sensor(sensors[n].r, sensors[n].r, 0);
+    }
+
+    /// @brief Read from file & Initialization 
+    /// @param fin 
+    Problem(ifstream &fin) {
+        fin >> len >> n;
+        sensors = vector<Sensor>(n + 2);
+        for (int i = 1; i <= n; i++) {
+            fin >> sensors[i].l >> sensors[i].r >> sensors[i].t;
         }
         sensors[n + 1] = Sensor(sensors[n].r, sensors[n].r, 0);
     }
@@ -125,15 +140,23 @@ public:
 
 int main() {
     int T;
-    // string IN_PATH = "./input";
-    string OUT_PATH = "./myanswer";
+    string IN_PATH = "./input";
+    string OUT_PATH = "./output-test";
 
-    cin >> T;
+    ifstream fin(IN_PATH);
+
+    // cin >> T;
+    fin >> T;
     while (T--) {
-        Problem prob = Problem();
+        auto st = high_resolution_clock::now();
+
+        Problem prob = Problem(fin);
         vector<double> pos;
         vector<double> speed;
         prob.solve(pos, speed);
+
+        auto ed = high_resolution_clock::now();
+        auto duration = duration_cast<milliseconds>(ed - st);
 
         // test output
         // for (double d : pos) {cout << d << " ";}
@@ -151,9 +174,17 @@ int main() {
         }
         sz = speed.size();
         for (int i = 0; i < sz; i++) {
+            fout << speed[i];
             if (i == sz - 1) fout << '\n';
             else fout << ' ';
         }
+
+        fout << "time = " << duration.count() << " ms\n";
+
+        fout.close();
     }
+    
+    fin.close();
+
     return 0;
 }

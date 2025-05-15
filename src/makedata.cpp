@@ -65,7 +65,7 @@ int main() {
     string outpath = "./input";
 
     ofstream fout;
-    int tot = 10;   // number of test data
+    int tot = 8;   // number of test data
     int num = 1000; // number of sensors
     double length;
 
@@ -78,7 +78,7 @@ int main() {
         length = sensors.back().right;
         fout.open(outpath, ios::out | ios::app);
         fout << length << "\n" << num << "\n";
-        for (int i = 1; i <= num; i++) {
+        for (int i = 0; i < num; i++) {
             fout << sensors[i].left << " " << sensors[i].right << " " << sensors[i].time << "\n";
         }
         fout.close();

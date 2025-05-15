@@ -16,8 +16,23 @@ int index = 0;
 Coefficient coeff = coeffList[index];
 double vStar = vStarList[index];
 
+
 double calPower(double v) {
     return coeff.c3 * v * v * v + coeff.c2 * v * v + coeff.c1 * v + coeff.c0;
+}
+
+
+double calEnergy(double len, double v) {
+    return len / v * calPower(v);
+}
+
+double calEnergy(const vector<double> &pos, const vector<double> &speed) {
+    int sz = speed.size();
+    double e = 0;
+    for (int i = 0; i < sz; i++) {
+        e += calEnergy(pos[i + 1] - pos[i], speed[i]);
+    }
+    return e;
 }
 
 
@@ -144,9 +159,12 @@ int main() {
     string OUT_PATH = "./output-test";
 
     ifstream fin(IN_PATH);
+    ofstream fout(OUT_PATH, ios::trunc);
+    fout.close();
 
     // cin >> T;
     fin >> T;
+    cout << "Read T = " << T << "\n";
     while (T--) {
         auto st = high_resolution_clock::now();
 
@@ -158,13 +176,14 @@ int main() {
         auto ed = high_resolution_clock::now();
         auto duration = duration_cast<milliseconds>(ed - st);
 
+        double energy = calEnergy(pos, speed);
+
         // test output
         // for (double d : pos) {cout << d << " ";}
         // puts("");
         // for (double v : speed) {cout << v << " ";}
         // puts("");
         pos.insert(pos.begin(), 0);
-        ofstream fout;
         fout.open(OUT_PATH, ios::out | ios::app);
         int sz = pos.size();
         for (int i = 0; i < sz; i++) {
@@ -180,11 +199,14 @@ int main() {
         }
 
         fout << "time = " << duration.count() << " ms\n";
+        fout << "energy = " << to_string(energy) << "\n";
 
         fout.close();
     }
     
     fin.close();
 
+    puts("Over");
+    
     return 0;
 }

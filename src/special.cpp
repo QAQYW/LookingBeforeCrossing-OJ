@@ -4,8 +4,10 @@
 #include <algorithm>
 #include <unistd.h>
 #include <cmath>
+#include <string>
 #include <cstring>
 #include <stdio.h>
+#include <cstdio>
 using namespace std;
 
 
@@ -57,8 +59,6 @@ private:
     double len;
     vector<Sensor> sensors;
 public:
-    /// @brief Construct from file
-    /// @param in_f 
     Problem(FILE *in_f) {
         fscanf(in_f, "%lf", &len);
         fscanf(in_f, "%d", &n);
@@ -135,17 +135,11 @@ void judge(FILE *in_f, FILE *userout_f, FILE *stdout_f, int &judge_state, int &s
         fscanf(userout_f, "%lf", &speed[i]);
     }
 
-    // puts("ok1");
-
     // format error
     if (fabs(pos.back() - prob.getLen()) > ULP) {
         judge_state = _FMT_ERR;
-        // puts("format error");
-        // printf("back = %lf, len = %lf\n", pos.back(), prob.getLen());
         return;
     }
-
-    // puts("ok2");
 
     // calculate UAV energy consumption
     double userans = 0;
@@ -154,8 +148,6 @@ void judge(FILE *in_f, FILE *userout_f, FILE *stdout_f, int &judge_state, int &s
         judge_state = _SOL_ERR;
         return;
     }
-
-    // puts("ok3");
 
     // feasible solution, calculate score
     double ratio = (userans - refans) / refans;

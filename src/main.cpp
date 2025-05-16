@@ -37,7 +37,8 @@ double calEnergy(const vector<double> &pos, const vector<double> &speed) {
     int sz = speed.size();
     double e = 0, t, v, len;
     for (int i = 0; i < sz; i++) {
-        len = pos[i + 1] - pos[i];
+		if (i > 0) len = pos[i] - pos[i - 1];
+		else len = pos[i];
         v = speed[i];
         t = calEnergy(len, v);
         e += t;
@@ -87,7 +88,7 @@ public:
     void solve(vector<double> &pos, vector<double> &speed) { 
         pos.clear();
         speed.clear();
-        pos.emplace_back(0);
+        // pos.emplace_back(0);
 
         vector<double> tsum = vector<double>(n + 1, 0);
         for (int i = 1; i <= n; i++) {
@@ -154,7 +155,7 @@ public:
     void solve_AllNorth(vector<double> &pos, vector<double> &speed) {
         pos.clear();
         speed.clear();
-        pos.emplace_back(0);
+        // pos.emplace_back(0);
 
         double last = 0;
         for (int i = 1; i <= n; i++) {
@@ -172,7 +173,7 @@ public:
     void solve_AllSouth(vector<double> &pos, vector<double> &speed) {
         pos.clear();
         speed.clear();
-        pos.emplace_back(0);
+        // pos.emplace_back(0);
         
         for (int i = 1; i <= n; i++) {
             double v = (sensors[i + 1].l - sensors[i].l) / sensors[i].t;
@@ -185,6 +186,8 @@ public:
 
 
 int main() {
+    auto gst = high_resolution_clock::now();
+
     int T;
     string IN_PATH = "./input-test";
     string OUT_PATH = "./output-test";
@@ -199,6 +202,7 @@ int main() {
     while (T--) {
         auto st = high_resolution_clock::now();
 
+        // Problem prob = Problem();
         Problem prob = Problem(fin);
         vector<double> pos;
         vector<double> speed;
@@ -210,7 +214,7 @@ int main() {
         double energy = calEnergy(pos, speed);
         double optimal = energy;
 
-        // test output
+        // // test output
         // for (double d : pos) {cout << d << " ";}
         // puts("");
         // for (double v : speed) {cout << v << " ";}
@@ -218,20 +222,21 @@ int main() {
 
         fout.open(OUT_PATH, ios::out | ios::app);
         int sz = pos.size();
+        fout << sz << "\n";
         for (int i = 0; i < sz; i++) {
             fout << pos[i];
             if (i == sz - 1) fout << '\n';
             else fout << ' ';
         }
-        sz = speed.size();
+        // sz = speed.size();
         for (int i = 0; i < sz; i++) {
             fout << speed[i];
             if (i == sz - 1) fout << '\n';
             else fout << ' ';
         }
 
-        fout << "time = " << duration.count() << " ms\n";
-        fout << "energy = " << to_string(energy) << "\n";
+        // fout << "time = " << duration.count() << " ms\n";
+        // fout << "energy = " << to_string(energy) << "\n";
 
         fout.close();
         
@@ -255,6 +260,10 @@ int main() {
     }
     
     fin.close();
+
+    auto ged = high_resolution_clock::now();
+    auto gduration = duration_cast<milliseconds>(ged - gst);
+    cout << "time = " << gduration.count() << " ms\n";
 
     puts("Over");
     

@@ -65,15 +65,16 @@ int main() {
     string outpath = "./input-test";
 
     ofstream fout;
-    int tot = 8;   // number of test data
-    int num = 1000; // number of sensors
+    int tot = 10;   // number of test data
+    int num1 = 500, num2 = 1000, num; // number of sensors
     double length;
 
     fout.open(outpath, ios::out);
     fout << tot << "\n";
     fout.close();
 
-    for (int i = 1; i <= 8; i++) {
+    for (int i = 1; i <= 10; i++) {
+        num = i <= 2 ? num1 : num2;
         vector<Sensor> sensors = make_random(num);
         length = sensors.back().right;
         fout.open(outpath, ios::out | ios::app);
@@ -84,7 +85,7 @@ int main() {
         fout.close();
     }
 
-    puts("Data generated.\n");
+    puts("\nData generated.\n");
 
     return 0;
 }

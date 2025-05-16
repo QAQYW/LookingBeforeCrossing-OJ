@@ -3,11 +3,14 @@
 #include <vector>
 #include <algorithm>
 #include <unistd.h>
+#include <cstdlib>
 #include <cmath>
 #include <string>
 #include <cstring>
 #include <stdio.h>
 #include <cstdio>
+#include <cassert>
+#include <utility>
 using namespace std;
 
 

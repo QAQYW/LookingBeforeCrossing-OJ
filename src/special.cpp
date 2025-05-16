@@ -129,27 +129,41 @@ void judge(FILE *in_f, FILE *userout_f, FILE *stdout_f, int &judge_state, int &s
     vector<double> pos(sz);
     vector<double> speed(sz);
     for (int i = 0; i < sz; i++) {
-        fscanf(userout_f, "%lf", &speed[i]);
-    }
-    for (int i = 0; i < sz; i++) {
         fscanf(userout_f, "%lf", &pos[i]);
     }
+    for (int i = 0; i < sz; i++) {
+        fscanf(userout_f, "%lf", &speed[i]);
+    }
+
+    // puts("ok1");
 
     // format error
     if (fabs(pos.back() - prob.getLen()) > ULP) {
         judge_state = _FMT_ERR;
+        // puts("format error");
+        // printf("back = %lf, len = %lf\n", pos.back(), prob.getLen());
         return;
     }
 
+    // puts("ok2");
+
     // calculate UAV energy consumption
     double userans = 0;
-    bool solflag = cal_energy(sz, pos, speed, userans);
+    bool solflag = prob.cal_energy(sz, pos, speed, userans);
     if (!solflag) {
         judge_state = _SOL_ERR;
         return;
     }
 
+    // puts("ok3");
+
     // feasible solution, calculate score
+    double ratio = (userans - refans) / refans;
+    if (ratio <= 0.001) score += 10;
+    else if (ratio <= 0.01) score += 9;
+    else if (ratio <= 0.05) score += 8;
+    else if (ratio <= 0.20) score += 6;
+    else score += 4;
 }
 
 
@@ -175,14 +189,14 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < T; i++) {
         judge(in_f, userout_f, stdout_f, judge_state, score, refanswer[i]);
     }
-
-    if (judge_state == _JUDGING) { // accept
-        judge_state = _AC;
-    }
     
     fclose(in_f);
     fclose(userout_f);
     fclose(stdout_f);
+
+    if (judge_state == _JUDGING) { // accept
+        judge_state = _AC;
+    }
 
     string score_str = to_string(score);
     char res[50];

@@ -240,21 +240,21 @@ int main() {
 
         fout.close();
         
-        cout << "Looking\n";
-        cout << "\ttime = " << duration.count() << " ms\n";
+        // cout << "Looking\n";
+        // cout << "\ttime = " << duration.count() << " ms\n";
         cout << "\tenergy = " << to_string(energy) << "\n";
 
-        prob.solve_AllNorth(pos, speed);
-        energy = calEnergy(pos, speed);
-        cout << "All North\n";
-        cout << "\tenergy = " << to_string(energy) << "\n";
-        cout << "\t" << to_string(energy / optimal * 100) << "\% of optimal\n";
+        // prob.solve_AllNorth(pos, speed);
+        // energy = calEnergy(pos, speed);
+        // cout << "All North\n";
+        // cout << "\tenergy = " << to_string(energy) << "\n";
+        // cout << "\t" << to_string(energy / optimal * 100) << "\% of optimal\n";
 
-        prob.solve_AllSouth(pos, speed);
-        energy = calEnergy(pos, speed);
-        cout << "All South\n";
-        cout << "\tenergy = " << to_string(energy) << "\n";
-        cout << "\t" << to_string(energy / optimal * 100) << "\% of optimal\n";
+        // prob.solve_AllSouth(pos, speed);
+        // energy = calEnergy(pos, speed);
+        // cout << "All South\n";
+        // cout << "\tenergy = " << to_string(energy) << "\n";
+        // cout << "\t" << to_string(energy / optimal * 100) << "\% of optimal\n";
 
         puts("");
     }

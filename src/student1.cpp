@@ -8,8 +8,13 @@ struct Sensor {
     double L, R, t;
 };
 
+/* -------------------------------------------------------------------------- */
+/*                                   hack 1                                   */
+/* -------------------------------------------------------------------------- */
+
 int main() {
     ifstream fin("./doc/input");
+    ofstream fout("./test-special/hack1");
     int T;
     // cin >> T; 
     fin >> T;
@@ -42,16 +47,22 @@ int main() {
         positions.push_back(D);
         speeds.push_back(speed);
 
-        cout << positions.size() << endl;
+        // cout << positions.size() << endl;
+        fout << positions.size() << endl;
         for (double pos : positions) {
-            cout << fixed << setprecision(6) << pos << " ";
+            // cout << fixed << setprecision(6) << pos << " ";
+            fout << fixed << setprecision(6) << pos << " ";
         }
-        cout << endl;
+        // cout << endl;
+        fout << endl;
         for (double spd : speeds) {
-            cout << fixed << setprecision(6) << spd << " ";
+            // cout << fixed << setprecision(6) << spd << " ";
+            fout << fixed << setprecision(6) << spd << " ";
         }
-        cout << endl;
+        // cout << endl;
+        fout << endl;
     }
     fin.close();
+    fout.close();
     return 0;
 }

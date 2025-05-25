@@ -141,10 +141,25 @@ void judge(FILE *in_f, FILE *userout_f, FILE *stdout_f, int &judge_state, int &s
     }
 
     // format error
+    // 最终位置不是终点
     if (fabs(pos.back() - prob.getLen()) > ULP) {
         judge_state = _FMT_ERR;
         // cout << "fmt err\n";
         return;
+    }
+    // 检查pos是否升序
+    for (int i = 1; i < sz; i++) {
+        if (pos[i] <= pos[i - 1]) {
+            judge_state = _FMT_ERR;
+            return;
+        }
+    }
+    // 检查速度是否小于等于0
+    for (int i = 0; i < sz; i++) {
+        if (speed[i] <= 0) {
+            judge_state = _FMT_ERR;
+            return;
+        }
     }
 
     // calculate UAV energy consumption

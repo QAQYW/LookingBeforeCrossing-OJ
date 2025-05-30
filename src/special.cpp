@@ -20,10 +20,12 @@ using namespace std;
 #define _AC         1
 #define _FMT_ERR    2
 #define _SOL_ERR    3
+#define _RUN_ERR    4
 
 #define _AC_STR         "1"
 #define _FMT_ERR_STR    "2"
 #define _SOL_ERR_STR    "3"
+#define _RUN_ERR_STR    "4"
 
 
 char outfile[50];
@@ -130,14 +132,28 @@ void judge(FILE *in_f, FILE *userout_f, FILE *stdout_f, int &judge_state, int &s
     
     // read the student's output
     int sz;
-    fscanf(userout_f, "%d", &sz);
+    // fscanf(userout_f, "%d", &sz);
+    if (fscanf(userout_f, "%d", &sz) != 1) {
+        judge_state = _RUN_ERR;
+        return;
+    }
+    if (sz <= 0) {
+        judge_state = _RUN_ERR;
+        return;
+    }
     vector<double> pos(sz);
     vector<double> speed(sz);
     for (int i = 0; i < sz; i++) {
-        fscanf(userout_f, "%lf", &pos[i]);
+        if (fscanf(userout_f, "%lf", &pos[i]) != 1) {
+            judge_state = _RUN_ERR;
+            return;
+        }
     }
     for (int i = 0; i < sz; i++) {
-        fscanf(userout_f, "%lf", &speed[i]);
+        if (fscanf(userout_f, "%lf", &speed[i]) != 1) {
+            judge_state = _RUN_ERR;
+            return;
+        }
     }
 
     // format error
@@ -198,10 +214,51 @@ int main(int argc, char *argv[]) {
     int score = 0; // 记录学生得分
     int judge_state = _JUDGING;
 
+    char res[50];
+    char extra_info[50];
+    string score_str = to_string(score);
+
+    if (!in_f) {
+        fclose(in_f);fclose(userout_f);fclose(stdout_f);
+        strcpy(res, "AnswerWrong");
+        strcpy(extra_info, "8");
+        score_str = "0";
+        printf("%s %s %s", res, score_str.c_str(), extra_info);
+        return 0;
+    }
+    if (!userout_f) {
+        fclose(in_f);fclose(userout_f);fclose(stdout_f);
+        strcpy(res, "AnswerWrong");
+        strcpy(extra_info, "8");
+        score_str = "0";
+        printf("%s %s %s", res, score_str.c_str(), extra_info);
+        return 0;
+    }
+    if (!stdout_f) {
+        fclose(in_f);fclose(userout_f);fclose(stdout_f);
+        strcpy(res, "AnswerWrong");
+        strcpy(extra_info, "8");
+        score_str = "0";
+        printf("%s %s %s", res, score_str.c_str(), extra_info);
+        return 0;
+    }
+
     int T = 0;
     fscanf(in_f, "%d", &T);
     for (int i = 0; i < T; i++) {
         judge(in_f, userout_f, stdout_f, judge_state, score, refanswer[i]);
+        if (judge_state == _RUN_ERR) {
+            fclose(in_f);
+            fclose(userout_f);
+            fclose(stdout_f);
+            strcpy(res, "AnswerWrong");
+            strcpy(extra_info, "8");
+
+            // 结果，得分，错误信息
+            score_str = "0";
+            printf("%s %s %s", res, score_str.c_str(), extra_info);
+            return 0;
+        }
     }
     
     fclose(in_f);
@@ -212,9 +269,6 @@ int main(int argc, char *argv[]) {
         judge_state = _AC;
     }
 
-    string score_str = to_string(score);
-    char res[50];
-    char extra_info[50];
     if (judge_state == _AC) {
         strcpy(res, "Accepted");
         strcpy(extra_info, " ");
